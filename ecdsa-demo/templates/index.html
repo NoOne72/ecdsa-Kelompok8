@@ -1,1 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECDSA SecureSign | Digital Signature</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
 
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-shield-alt"></i> ECDSA <span>SecureSign</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="active">Demo</a>
+            <a href="#">Documentation</a>
+            <a href="#">About</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <header class="page-header">
+            <h1>Digital Document Signing System</h1>
+            <p>Amankan dokumen Anda dengan teknologi Elliptic Curve Cryptography (ECC)</p>
+        </header>
+
+        <section class="card key-section">
+            <div class="card-header">
+                <h2><i class="fas fa-key"></i> 1. Generate Key Pair</h2>
+            </div>
+            <div class="card-body">
+                <p>Bangkitkan kunci privat (rahasia) dan kunci publik (untuk verifikasi).</p>
+                <button id="btn-gen-keys" class="btn-gradient">Generate Keys</button>
+                
+                <div class="key-display">
+                    <div class="key-box">
+                        <label>Private Key <span class="badge private">Secret</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="private-key" readonly placeholder="Menunggu generate...">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                    <div class="key-box">
+                        <label>Public Key <span class="badge public">Shareable</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="public-key" readonly placeholder="Menunggu generate...">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid-container">
+            <section class="card sign-section">
+                <div class="card-header">
+                    <h2><i class="fas fa-file-contract"></i> 2. Sign (Sender)</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Upload Dokumen:</label>
+                        <input type="file" id="file-upload-sign" class="file-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Private Key:</label>
+                        <input type="text" id="sign-priv-key" placeholder="Auto-fill..." readonly>
+                    </div>
+                    <button id="btn-sign" class="btn-action" disabled>Sign Document</button>
+
+                    <div class="result-box">
+                        <label>Digital Signature:</label>
+                        <textarea id="signature-output" readonly placeholder="Output signature hex..."></textarea>
+                        <button id="btn-copy-sig" class="btn-small copy-btn" style="display:none;"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card verify-section">
+                <div class="card-header">
+                    <h2><i class="fas fa-search-dollar"></i> 3. Verify (Receiver)</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Upload Dokumen:</label>
+                        <input type="file" id="file-upload-verify" class="file-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Public Key Sender:</label>
+                        <input type="text" id="verify-pub-key" placeholder="Paste Public Key...">
+                    </div>
+                    <div class="form-group">
+                        <label>Signature:</label>
+                        <textarea id="verify-sig-input" placeholder="Paste Signature..."></textarea>
+                    </div>
+
+                    <div class="tamper-switch">
+                        <input type="checkbox" id="tamper-checkbox">
+                        <label for="tamper-checkbox">
+                            <i class="fas fa-user-secret"></i> Simulasi Hack (Tampering)
+                        </label>
+                    </div>
+
+                    <button id="btn-verify" class="btn-action">Verify Document</button>
+
+                    <div id="verification-status" class="status-box hidden">
+                        <i class="icon-status fas"></i>
+                        <span id="status-text">Waiting...</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 ECDSA Project. Dibuat untuk Final Project Kelompok 8.</p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-github"></i> GitHub</a>
+            <a href="#"><i class="fas fa-envelope"></i> Email</a>
+        </div>
+    </footer>
+
+    <div id="success-modal" class="modal-overlay hidden">
+        <div class="success-card">
+            <div class="icon-circle">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3>Berhasil Ditandatangani!</h3>
+            <p>Dokumen Anda telah diamankan menggunakan algoritma ECDSA.</p>
+            <div class="modal-actions">
+                <button id="btn-close-modal" class="btn-gradient">OK, Lanjut</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECDSA SecureSign | Digital Signature</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-shield-alt"></i> ECDSA <span>SecureSign</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="active">Demo</a>
+            <a href="#">Documentation</a>
+            <a href="#">About</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <header class="page-header">
+            <h1>Digital Document Signing System</h1>
+            <p>Amankan dokumen Anda dengan teknologi Elliptic Curve Cryptography (ECC)</p>
+        </header>
+
+        <section class="card key-section">
+            <div class="card-header">
+                <h2><i class="fas fa-key"></i> 1. Generate Key Pair</h2>
+            </div>
+            <div class="card-body">
+                <p>Bangkitkan kunci privat (rahasia) dan kunci publik (untuk verifikasi).</p>
+                <button id="btn-gen-keys" class="btn-gradient">Generate Keys</button>
+                
+                <div class="key-display">
+                    <div class="key-box">
+                        <label>Private Key <span class="badge private">Secret</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="private-key" readonly placeholder="Menunggu generate...">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                    <div class="key-box">
+                        <label>Public Key <span class="badge public">Shareable</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="public-key" readonly placeholder="Menunggu generate...">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid-container">
+            <section class="card sign-section">
+                <div class="card-header">
+                    <h2><i class="fas fa-file-contract"></i> 2. Sign (Sender)</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Upload Dokumen:</label>
+                        <input type="file" id="file-upload-sign" class="file-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Private Key:</label>
+                        <input type="text" id="sign-priv-key" placeholder="Auto-fill..." readonly>
+                    </div>
+                    <button id="btn-sign" class="btn-action" disabled>Sign Document</button>
+
+                    <div class="result-box">
+                        <label>Digital Signature:</label>
+                        <textarea id="signature-output" readonly placeholder="Output signature hex..."></textarea>
+                        <button id="btn-copy-sig" class="btn-small copy-btn" style="display:none;"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card verify-section">
+                <div class="card-header">
+                    <h2><i class="fas fa-search-dollar"></i> 3. Verify (Receiver)</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Upload Dokumen:</label>
+                        <input type="file" id="file-upload-verify" class="file-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Public Key Sender:</label>
+                        <input type="text" id="verify-pub-key" placeholder="Paste Public Key...">
+                    </div>
+                    <div class="form-group">
+                        <label>Signature:</label>
+                        <textarea id="verify-sig-input" placeholder="Paste Signature..."></textarea>
+                    </div>
+
+                    <div class="tamper-switch">
+                        <input type="checkbox" id="tamper-checkbox">
+                        <label for="tamper-checkbox">
+                            <i class="fas fa-user-secret"></i> Simulasi Hack (Tampering)
+                        </label>
+                    </div>
+
+                    <button id="btn-verify" class="btn-action">Verify Document</button>
+
+                    <div id="verification-status" class="status-box hidden">
+                        <i class="icon-status fas"></i>
+                        <span id="status-text">Waiting...</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 ECDSA Project. Dibuat untuk Final Project Kelompok 8.</p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-github"></i> GitHub</a>
+            <a href="#"><i class="fas fa-envelope"></i> Email</a>
+        </div>
+    </footer>
+
+    <div id="success-modal" class="modal-overlay hidden">
+        <div class="success-card">
+            <div class="icon-circle">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3>Berhasil Ditandatangani!</h3>
+            <p>Dokumen Anda telah diamankan menggunakan algoritma ECDSA.</p>
+            <div class="modal-actions">
+                <button id="btn-close-modal" class="btn-gradient">OK, Lanjut</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
