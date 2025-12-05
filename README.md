@@ -1,5 +1,15 @@
 # ecdsa-Kelompok8
 
+## Anggota Kelompok
+| Nama                 | NRP        |
+| -------------------- | ---------- |
+| Muhammad Rizq Taufan | 5027231021 |
+| Muhammad Nafi Firdaus| 5027231045 |
+| Gandhi Ert Julio     | 5027231081 |
+| Nicholas Arya        | 5027231058 |
+
+
+
 Demo tanda tangan digital berbasis **ECDSA (Elliptic Curve Digital Signature Algorithm)** untuk penugasan Final Project Kelompok 8. Fokusnya edukatif: menunjukkan cara membuat key pair, menandatangani file, memverifikasi signature, dan melihat efek tampering terhadap integritas data.
 
 ## Lingkup Pengerjaan
@@ -49,6 +59,7 @@ ecdsa-Kelompok8/
 ├── requirements.txt        # Python dependencies
 └── README.md               # Dokumentasi
 ```
+
 
 ## Cara Instalasi & Menjalankan (Windows/PowerShell)
 1. Masuk ke folder proyek:
